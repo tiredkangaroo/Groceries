@@ -30,8 +30,10 @@ func main() {
 		panic(fmt.Sprintf("Unable to ping the database. Error: %s", err))
 	}
 	SetupTables()
-	http.HandleFunc("/add", APIServer.AddToListPOST)
-	http.HandleFunc("/get", APIServer.GetListGET)
+	http.HandleFunc("/add", APIServer.AddItem)
+	http.HandleFunc("/get", APIServer.GetItems)
+	http.HandleFunc("/delete", APIServer.DeleteItem)
+	http.Handle("/", http.FileServer(http.Dir("./static")))
 	fmt.Println("Running API Server at http://[::1]:8080")
 	http.ListenAndServe(":8080", nil)
 }

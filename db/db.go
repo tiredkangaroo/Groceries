@@ -117,3 +117,22 @@ func SelectAllFrom(entity interface{}) ([]interface{}, error) {
 
 	return result, nil
 }
+func DeleteWhere(entity interface{}) (sql.Result, error) {
+	entityType := reflect.TypeOf(entity)
+	statement := fmt.Sprintf("DELETE FROM %s WHERE ", entityType.Name())
+	for i := 0; i < entityType.NumField(); i++ {
+		field := entityType.Field(i)
+		val := reflect.ValueOf(entity).Field(i)
+		var value interface{}
+		if val.Kind() == reflect.String {
+			value = "'" + val.String() + "'"
+		}
+		statement += fmt.Sprintf("%s=%s", field.Name, value)
+		if i != entityType.NumField()-1 {
+			statement += "  AND "
+		}
+	}
+	statement += ";"
+	loge(statement)
+	return DATABASE.Exec(statement)
+}

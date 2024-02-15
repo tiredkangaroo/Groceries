@@ -12,7 +12,7 @@ import (
 func log(t string, u string) {
 	fmt.Println(fmt.Sprintf("[%s]: %s", t, u))
 }
-func AddToListPOST(w http.ResponseWriter, r *http.Request) {
+func AddItem(w http.ResponseWriter, r *http.Request) {
 	log(r.Method, r.URL.String())
 	if r.Method != http.MethodPost {
 		http.Error(w, "This path takes a POST request only.", http.StatusBadRequest)
@@ -37,7 +37,7 @@ func AddToListPOST(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Fprintf(w, "Success!")
 }
-func GetListGET(w http.ResponseWriter, r *http.Request) {
+func GetItems(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "This path takes a GET request only.", http.StatusBadRequest)
 		return
@@ -54,4 +54,22 @@ func GetListGET(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(dt)
+}
+func DeleteItem(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "This path only takes a POST request.", http.StatusBadRequest)
+		return
+	}
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, "Error parsing form", http.StatusBadRequest)
+		return
+	}
+	product_name := r.Form.Get("product_name")
+	_, err = dbm.DeleteWhere(models.Product{Name: product_name})
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error deleting the product. (%s)", err.Error()), http.StatusBadRequest)
+		return
+	}
+	fmt.Fprintf(w, "Success!")
 }
