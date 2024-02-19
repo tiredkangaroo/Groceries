@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"github.com/google/uuid"
 	"reflect"
 )
 
@@ -37,6 +38,7 @@ func CreateTableIfNotExists(entity interface{}) (sql.Result, error) {
 		return nil, errors.New("The database has not yet been connected to.")
 	}
 	query := fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s (`, structType.Name())
+	query += "ID varchar(255),"
 	for j := 0; j < structType.NumField(); j++ {
 		field := structType.Field(j)
 		_type, err := getType(reflect.Zero(field.Type).Interface())
@@ -59,6 +61,10 @@ func InsertIntoTable(entity interface{}) (sql.Result, error) {
 	}
 	statement := fmt.Sprintf("INSERT INTO %s (", structType.Name())
 	secondValues := " VALUES ("
+	statement += "ID,"
+	random_id := uuid.New().String()
+	secondValues += "'" + random_id + "'"
+	secondValues += ","
 	for j := 0; j < structType.NumField(); j++ {
 		field := structType.Field(j)
 		name := field.Name
