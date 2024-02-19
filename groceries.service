@@ -1,0 +1,13 @@
+[Unit]
+Description="Groceries App"
+After=network.target
+
+[Service]
+Environment="GOPATH=/home/nikhilkumar/go"
+WorkingDirectory=/home/nikhilkumar/groceries
+ExecStart=go run /home/nikhilkumar/groceries/main.go
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
