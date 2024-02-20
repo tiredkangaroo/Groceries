@@ -11,7 +11,7 @@ import (
 
 const (
 	USER     = "postgres"
-	PASSWORD = ""
+	PASSWORD = "password"
 	DB_NAME  = "groceries_app"
 )
 
@@ -30,10 +30,10 @@ func main() {
 		panic(fmt.Sprintf("Unable to ping the database. Error: %s", err))
 	}
 	SetupTables()
-	http.HandleFunc("/add", APIServer.AddItem)
-	http.HandleFunc("/get", APIServer.GetItems)
-	http.HandleFunc("/delete", APIServer.DeleteItem)
+	http.HandleFunc("/api/add", APIServer.AddItem)
+	http.HandleFunc("/api/get", APIServer.GetItems)
+	http.HandleFunc("/api/delete", APIServer.DeleteItem)
 	http.Handle("/", http.FileServer(http.Dir("./static")))
-	fmt.Println("Running API Server at http://[::1]:8080")
-	http.ListenAndServe(":8080", nil)
+	fmt.Println("Running API Server at http://[::1]:8030")
+	http.ListenAndServe(":8030", nil)
 }

@@ -38,7 +38,6 @@ func CreateTableIfNotExists(entity interface{}) (sql.Result, error) {
 		return nil, errors.New("The database has not yet been connected to.")
 	}
 	query := fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s (`, structType.Name())
-	query += "ID varchar(255),"
 	for j := 0; j < structType.NumField(); j++ {
 		field := structType.Field(j)
 		_type, err := getType(reflect.Zero(field.Type).Interface())
@@ -54,10 +53,10 @@ func CreateTableIfNotExists(entity interface{}) (sql.Result, error) {
 	loge(query)
 	return DATABASE.Exec(query)
 }
-func InsertIntoTable(entity interface{}) (sql.Result, error) {
+func InsertIntoTable(entity interface{}) (string, error) {
 	structType := reflect.TypeOf(entity)
 	if DATABASE == nil {
-		return nil, errors.New("The database has not yet been connected to.")
+		return "", errors.New("The database has not yet been connected to.")
 	}
 	statement := fmt.Sprintf("INSERT INTO %s (", structType.Name())
 	secondValues := " VALUES ("
@@ -65,7 +64,7 @@ func InsertIntoTable(entity interface{}) (sql.Result, error) {
 	random_id := uuid.New().String()
 	secondValues += "'" + random_id + "'"
 	secondValues += ","
-	for j := 0; j < structType.NumField(); j++ {
+	for j := 1; j < structType.NumField(); j++ {
 		field := structType.Field(j)
 		name := field.Name
 		statement += name
@@ -85,7 +84,11 @@ func InsertIntoTable(entity interface{}) (sql.Result, error) {
 	secondValues += ")"
 	statement += secondValues
 	loge(statement)
-	return DATABASE.Exec(statement)
+	_, err := DATABASE.Exec(statement)
+	if err != nil {
+		return "", err
+	}
+	return random_id, nil
 }
 
 func SelectAllFrom(entity interface{}) ([]interface{}, error) {
@@ -126,7 +129,17 @@ func SelectAllFrom(entity interface{}) ([]interface{}, error) {
 func DeleteWhere(entity interface{}) (sql.Result, error) {
 	entityType := reflect.TypeOf(entity)
 	statement := fmt.Sprintf("DELETE FROM %s WHERE ", entityType.Name())
+	var nums int = 0
 	for i := 0; i < entityType.NumField(); i++ {
+		if reflect.ValueOf(entity).Field(i).IsZero() {
+			continue
+		}
+		nums++
+	}
+	for i := 0; i < entityType.NumField(); i++ {
+		if reflect.ValueOf(entity).Field(i).IsZero() {
+			continue
+		}
 		field := entityType.Field(i)
 		val := reflect.ValueOf(entity).Field(i)
 		var value interface{}
@@ -134,7 +147,7 @@ func DeleteWhere(entity interface{}) (sql.Result, error) {
 			value = "'" + val.String() + "'"
 		}
 		statement += fmt.Sprintf("%s=%s", field.Name, value)
-		if i != entityType.NumField()-1 {
+		if i != nums-1 {
 			statement += "  AND "
 		}
 	}

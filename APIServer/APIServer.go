@@ -13,6 +13,7 @@ func log(t string, u string) {
 	fmt.Println(fmt.Sprintf("[%s]: %s", t, u))
 }
 func AddItem(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	log(r.Method, r.URL.String())
 	if r.Method != http.MethodPost {
 		http.Error(w, "This path takes a POST request only.", http.StatusBadRequest)
@@ -31,13 +32,20 @@ func AddItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Do something with the form data
-	_, err = dbm.InsertIntoTable(models.Product{Name: product_name})
+	id, err := dbm.InsertIntoTable(models.Product{Name: product_name})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
-	fmt.Fprintf(w, "Success!")
+	dt, err := json.Marshal(models.Product{ID: id, Name: product_name})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(dt)
 }
 func GetItems(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	if r.Method != http.MethodGet {
 		http.Error(w, "This path takes a GET request only.", http.StatusBadRequest)
 		return
@@ -56,6 +64,7 @@ func GetItems(w http.ResponseWriter, r *http.Request) {
 	w.Write(dt)
 }
 func DeleteItem(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	if r.Method != http.MethodPost {
 		http.Error(w, "This path only takes a POST request.", http.StatusBadRequest)
 		return
@@ -65,8 +74,8 @@ func DeleteItem(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error parsing form", http.StatusBadRequest)
 		return
 	}
-	product_name := r.Form.Get("product_name")
-	_, err = dbm.DeleteWhere(models.Product{Name: product_name})
+	id := r.Form.Get("ID")
+	_, err = dbm.DeleteWhere(models.Product{ID: id})
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error deleting the product. (%s)", err.Error()), http.StatusBadRequest)
 		return
