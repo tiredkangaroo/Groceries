@@ -1,48 +1,33 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+html {
+  font-size: max(250%, 45px);
 }
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.newProductInput {
+  width: max(98.5%, 150px);
+  padding: 14.5px 0px 14.5px 0.5%;
+  margin-right: max(3%, 6px);
+  /* font-size: 150%; */
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+.newProductButton {
+  width: max(99%, 150px);
+  /* margin-right: 7px; */
+  height: 100%;
+  padding: 20px 4.5px 20px 4.5px;
 }
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.itemDelete {
+  margin-left: 85%;
+  padding: 2px 3px 2px 3px;
 }
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.Item {
+  margin-bottom: max(25px, 2.5%);
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.Item:hover {
+  background: #ad2333;
 }
-
-.card {
-  padding: 2em;
+.Item:hover::before {
+  content: "(Done) ";
 }
-
-.read-the-docs {
-  color: #888;
-}
-span {
-  font-size: 4rem;
-}
-.cb {
-  padding: 4rem;
+.newProduct {
+  position: fixed;
+  bottom: 1%;
+  width: 100%;
 }

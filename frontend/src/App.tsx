@@ -12,10 +12,17 @@ function App() {
   );
   const [error, setError] = useState<string | null>(null);
   const NewProductInputRef = useRef<null | HTMLInputElement>(null);
+  console.log(`This application is running in ${import.meta.env.MODE} mode.`);
+  let domain: string;
+  if (import.meta.env.MODE === "development") {
+    domain = "http://localhost:8030";
+  } else {
+    domain = "";
+  }
   useEffect(() => {
     async function FetchGet() {
       try {
-        const res = await fetch(`/api/get`);
+        const res = await fetch(`${domain}/api/get`);
         if (!res.ok) {
           console.log(res);
           throw new Error("Failed to fetch data");
@@ -30,9 +37,9 @@ function App() {
     }
 
     FetchGet();
-  }, []);
+  }, [domain]);
   async function deleteProduct(id: string) {
-    const res = await fetch(`/api/delete`, {
+    const res = await fetch(`${domain}/api/delete`, {
       method: "POST",
       mode: "cors",
       headers: {
@@ -48,7 +55,7 @@ function App() {
   async function NewProductHandler(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const value = NewProductInputRef.current?.value;
-    const res = await fetch(`/api/add`, {
+    const res = await fetch(`${domain}/api/add`, {
       method: "POST",
       mode: "cors",
       headers: {
@@ -65,12 +72,20 @@ function App() {
   function NewProductField() {
     return (
       <form
+        className="newProduct"
         onSubmit={(e) => {
           NewProductHandler(e);
         }}
       >
-        <input placeholder="product" ref={NewProductInputRef}></input>
-        <button type="submit">submit</button>
+        <input
+          className="newProductInput"
+          placeholder="product"
+          ref={NewProductInputRef}
+          name="item-name"
+        ></input>
+        <button type="submit" className="newProductButton">
+          submit
+        </button>
       </form>
     );
   }
@@ -81,17 +96,16 @@ function App() {
     return (
       <>
         {data.map((v) => (
-          <div>
-            <input
-              className="cb"
-              type="checkbox"
-              onInput={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                deleteProduct(v.ID);
-              }}
-            ></input>
-            <span key={v.ID}>{v.Name}</span>
+          <div
+            className="Item"
+            key={v.ID}
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              deleteProduct(v.ID);
+            }}
+          >
+            <span key={v.ID}>- {v.Name}</span>
           </div>
         ))}
         <NewProductField />
