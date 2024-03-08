@@ -3,9 +3,9 @@ Description="Groceries App"
 After=network.target
 
 [Service]
-Environment="GOPATH=/home/homeserver/groceries"
-WorkingDirectory=/home/homeserver/groceries
-ExecStart=go run /home/homeserver/groceries/main.go
+Environment="GOPATH=/home/homeserver"
+WorkingDirectory=/home/homeserver/checklist
+ExecStart=go run /home/homeserver/checklist/main.go
 Restart=always
 User=root
 
