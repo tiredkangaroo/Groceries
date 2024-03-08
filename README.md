@@ -1,4 +1,4 @@
-# basic checklist app with api and frontend written in golang and react
+# checklist
 
 This is a basic checklist app written in golang and react. 
 
