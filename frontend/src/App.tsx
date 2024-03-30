@@ -15,10 +15,11 @@ function App() {
   console.log(`This application is running in ${import.meta.env.MODE} mode.`);
   let domain: string;
   if (import.meta.env.MODE === "development") {
-    domain = "http://localhost:8030";
+    domain = `http://${window.location.host.split(":")[0]}:8030`;
   } else {
     domain = "";
   }
+  console.log(domain);
   useEffect(() => {
     async function FetchGet() {
       try {
@@ -38,7 +39,19 @@ function App() {
 
     FetchGet();
   }, [domain]);
-  async function deleteProduct(id: string) {
+  async function deleteAllProducts() {
+    if (!data) {
+      return "This function cannot be called. There must be data present and loaded.";
+    }
+    for (let i = 0; i < data.length; i++) {
+      deleteProduct(data[i].ID, "all");
+    }
+    setData(null);
+  }
+  async function deleteProduct(id: string, origin: string) {
+    if (!origin) {
+      origin = "one";
+    }
     const res = await fetch(`${domain}/api/delete`, {
       method: "POST",
       mode: "cors",
@@ -47,7 +60,7 @@ function App() {
       },
       body: `ID=${id}`,
     });
-    if (res.status === 200) {
+    if (res.status === 200 && origin != "all") {
       const newData = data?.filter((v) => v.ID != id);
       setData(newData);
     }
@@ -65,7 +78,12 @@ function App() {
     });
     const jsonData: Product = await res.json();
     if (res.status === 200) {
-      const newData = [...(data as Product[]), jsonData];
+      let newData;
+      if (!data) {
+        newData = [jsonData];
+      } else {
+        newData = [...(data as Product[]), jsonData];
+      }
       setData(newData);
     }
   }
@@ -79,12 +97,12 @@ function App() {
       >
         <input
           className="newProductInput"
-          placeholder="product"
+          placeholder="Item"
           ref={NewProductInputRef}
           name="item-name"
         ></input>
         <button type="submit" className="newProductButton">
-          submit
+          Add
         </button>
       </form>
     );
@@ -95,6 +113,15 @@ function App() {
   if (data) {
     return (
       <>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            deleteAllProducts();
+          }}
+        >
+          Delete All
+        </button>
         {data.map((v) => (
           <div
             className="Item"
@@ -102,7 +129,7 @@ function App() {
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
-              deleteProduct(v.ID);
+              deleteProduct(v.ID, "one");
             }}
           >
             <span key={v.ID}>- {v.Name}</span>
