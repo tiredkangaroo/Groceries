@@ -1,39 +1,40 @@
 package main
 
 import (
-	"fmt"
-	_ "github.com/lib/pq"
-	"main/APIServer"
-	dbm "main/db"
-	"main/models"
-	"net/http"
+	"os"
+
+	"github.com/joho/godotenv"
+	"github.com/tiredkangaroo/sculpt"
 )
 
-const (
-	USER     = "postgres"
-	PASSWORD = "password"
-	DB_NAME  = "groceries_app"
-)
-
-func SetupTables() {
-	_, err := dbm.CreateTableIfNotExists(models.Product{})
-	if err != nil {
-		panic(err)
-	}
+type Item struct {
+	ID   string
+	Name string
 }
+
 func main() {
-	db, err := dbm.ConnectToDB(USER, PASSWORD, DB_NAME)
+	godotenv.Load(".env")
+
+	user := os.Getenv("POSTGRES_CONNECTION_USER")
+	password := os.Getenv("POSTGRES_CONNECTION_PASSWORD")
+	dbname := os.Getenv("POSTGRES_CONNECTION_DBNAME")
+	err := sculpt.Connect(
+		user,
+		password,
+		dbname,
+	)
+
 	if err != nil {
-		panic(err)
+		sculpt.LogError(err.Error())
+		return
 	}
-	if err := db.Ping(); err != nil {
-		panic(fmt.Sprintf("Unable to ping the database. Error: %s", err))
+
+	item := sculpt.Register(new(Item))
+	err = item.Save()
+	if err != nil {
+		sculpt.LogError(err.Error())
+		return
 	}
-	SetupTables()
-	http.HandleFunc("/api/add", APIServer.AddItem)
-	http.HandleFunc("/api/get", APIServer.GetItems)
-	http.HandleFunc("/api/delete", APIServer.DeleteItem)
-	http.Handle("/", http.FileServer(http.Dir("./static")))
-	fmt.Println("Running API Server at http://[::1]:8030")
-	http.ListenAndServe(":8030", nil)
+
+	startAPIServer(item)
 }
