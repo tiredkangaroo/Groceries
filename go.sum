@@ -8,5 +8,17 @@ github.com/tiredkangaroo/sculpt v0.0.5-0.20240808163202-ee03adf62c72 h1:eNtr3nO2
 github.com/tiredkangaroo/sculpt v0.0.5-0.20240808163202-ee03adf62c72/go.mod h1:XKSG4k4CfDcAwISON43wXN5B4znKf3A2a+EVrqFJCLo=
 github.com/tiredkangaroo/sculpt v0.0.5-0.20240815181342-e90aed5aff28 h1:vuoS05NH7ZzY0Rf1OPHpsATDo3dvvfcM6ATeVNEm6/4=
 github.com/tiredkangaroo/sculpt v0.0.5-0.20240815181342-e90aed5aff28/go.mod h1:XKSG4k4CfDcAwISON43wXN5B4znKf3A2a+EVrqFJCLo=
+github.com/tiredkangaroo/sculpt v0.0.5-0.20240815184237-719ec6dae5c6 h1:QtPm+w2K4t5JtOWQAtplzMpE7zrpqyOfll5BePvM/RM=
+github.com/tiredkangaroo/sculpt v0.0.5-0.20240815184237-719ec6dae5c6/go.mod h1:XKSG4k4CfDcAwISON43wXN5B4znKf3A2a+EVrqFJCLo=
+github.com/tiredkangaroo/sculpt v0.0.5-0.20240815184451-5ba5af5a8312 h1:+quFeDxwRX93rZ14znJQY4vIxZT2FS7+76ubuD7YllM=
+github.com/tiredkangaroo/sculpt v0.0.5-0.20240815184451-5ba5af5a8312/go.mod h1:XKSG4k4CfDcAwISON43wXN5B4znKf3A2a+EVrqFJCLo=
+github.com/tiredkangaroo/sculpt v0.0.5-0.20240815184626-357acd63a1a3 h1:+RxuF8b33h9IL1tEtoSUespi8vK+ODs7gxUJc40b9Ww=
+github.com/tiredkangaroo/sculpt v0.0.5-0.20240815184626-357acd63a1a3/go.mod h1:XKSG4k4CfDcAwISON43wXN5B4znKf3A2a+EVrqFJCLo=
+github.com/tiredkangaroo/sculpt v0.0.5-0.20240815191104-b0d345e7c3ad h1:djFN3BjwNHhCE0eiy9lRLOrrQWTnrCnvwbrLWMYYNqw=
+github.com/tiredkangaroo/sculpt v0.0.5-0.20240815191104-b0d345e7c3ad/go.mod h1:XKSG4k4CfDcAwISON43wXN5B4znKf3A2a+EVrqFJCLo=
+github.com/tiredkangaroo/sculpt v0.0.5-0.20240815200316-df11e2fc8073 h1:UAmhT3MtzVmZ7RL6EEYUYziwVVl9H2JW3V4iuUCkFbY=
+github.com/tiredkangaroo/sculpt v0.0.5-0.20240815200316-df11e2fc8073/go.mod h1:XKSG4k4CfDcAwISON43wXN5B4znKf3A2a+EVrqFJCLo=
+github.com/tiredkangaroo/sculpt v0.0.5-0.20240815200507-be08ffc4cb16 h1:vN7vJzXjLdtClpjg6/pgT9A0BtBFen2H323lQWpaLOY=
+github.com/tiredkangaroo/sculpt v0.0.5-0.20240815200507-be08ffc4cb16/go.mod h1:XKSG4k4CfDcAwISON43wXN5B4znKf3A2a+EVrqFJCLo=
 nhooyr.io/websocket v1.8.11 h1:f/qXNc2/3DpoSZkHt1DQu6rj4zGC8JmkkLkWss0MgN0=
 nhooyr.io/websocket v1.8.11/go.mod h1:rN9OFWIUwuxg4fR5tELlYC04bXYowCP9GX47ivo2l+c=

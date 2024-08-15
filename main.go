@@ -8,8 +8,9 @@ import (
 )
 
 type Item struct {
-	ID   string
-	Name string
+	ID          string `json:"id"`
+	DateCreated string `json:"date_created"`
+	Name        string `json:"name"`
 }
 
 func main() {
@@ -30,6 +31,7 @@ func main() {
 	}
 
 	item := sculpt.Register(new(Item))
+
 	err = item.Save()
 	if err != nil {
 		sculpt.LogError(err.Error())

@@ -2,6 +2,7 @@ package main
 
 import (
 	"log/slog"
+	"time"
 
 	"github.com/nikumar1206/puff"
 	"github.com/tiredkangaroo/sculpt"
@@ -9,39 +10,23 @@ import (
 
 // NewItemInput is used for the input on path POST /api/item.
 type NewItemInput struct {
-	ItemName string `kind:"body" description:"Name for the new item."`
+	ItemName string `kind:"body" description:"Name for the new item." example:"laundry"`
 }
 
-// GetSpecificItemInput is used for the input on path GET /api/item
-type GetSpecificItemInput struct {
-	ID string `kind:"path" description:"ID of item to retrieve from database."`
+// SpecificItemInput is used for the input on path GET /api/item and DELETE /api/item
+type SpecificItemInput struct {
+	ID string `kind:"path" description:"ID of item to retrieve from database." example:"5NQDFNEF099G4997AO3A0GII"`
 }
 
 func startAPIServer(itemModel *sculpt.Model) {
 	app := puff.DefaultApp("Checklist")
 	apiRouter := puff.NewRouter("API", "/api")
 
-	newItemInput := new(NewItemInput)
-
-	apiRouter.Get("/items", "Retrieves all items in the checklist.", nil, func(c *puff.Context) {
-		items, err := sculpt.RunQuery[*Item](itemModel, sculpt.Query{})
-		if err != nil {
-			slog.Error("unable to run query for items", slog.String("error", err.Error()))
-			c.SendResponse(puff.JSONResponse{
-				Content: map[string]any{
-					"error": "unable to get items",
-				},
-			})
-		}
-		c.SendResponse(puff.JSONResponse{
-			Content: items,
-		})
-	})
-	specificItemInput := new(GetSpecificItemInput)
-	apiRouter.Get("/item/{id}", "Retrieve a specfic item in the checklist by its ID.", specificItemInput, func(c *puff.Context) {
+	getItemInput := new(SpecificItemInput)
+	apiRouter.Get("/item/{id}", "Retrieve a specfic item in the checklist by its ID.", getItemInput, func(c *puff.Context) {
 		items, err := sculpt.RunQuery[*Item](itemModel, sculpt.Query{
 			Conditions: []sculpt.Condition{
-				sculpt.EqualTo("ID", specificItemInput.ID),
+				sculpt.EqualTo("ID", getItemInput.ID),
 			},
 		})
 		if err != nil {
@@ -58,7 +43,7 @@ func startAPIServer(itemModel *sculpt.Model) {
 			c.SendResponse(puff.JSONResponse{
 				StatusCode: 404,
 				Content: map[string]any{
-					"error": "no items found with id: " + specificItemInput.ID,
+					"error": "no items found with id: " + getItemInput.ID,
 				},
 			})
 		case 1:
@@ -68,13 +53,14 @@ func startAPIServer(itemModel *sculpt.Model) {
 		default:
 			c.SendResponse(puff.JSONResponse{
 				Content: map[string]any{
-					"error": "retrieved multiple items for id: " + specificItemInput.ID,
+					"error": "retrieved multiple items for id: " + getItemInput.ID,
 				},
 			})
 		}
 		return
 	})
 
+	newItemInput := new(NewItemInput)
 	apiRouter.Post("/item", "Add a new item to the checklist.", newItemInput, func(c *puff.Context) {
 		randomID, err := generateNanoID()
 		if err != nil {
@@ -87,8 +73,9 @@ func startAPIServer(itemModel *sculpt.Model) {
 			return
 		}
 		itemRow, err := itemModel.New(&Item{
-			ID:   randomID,
-			Name: newItemInput.ItemName,
+			ID:          randomID,
+			DateCreated: time.Now().String(),
+			Name:        newItemInput.ItemName,
 		})
 		if err != nil {
 			slog.Error("unable to create item row", slog.String("error", err.Error()))
@@ -115,6 +102,44 @@ func startAPIServer(itemModel *sculpt.Model) {
 			},
 		})
 		return
+	})
+
+	deleteItemInput := new(SpecificItemInput)
+	apiRouter.Delete("/item/{id}", "Deletes item in the checklist that matches id.", deleteItemInput, func(c *puff.Context) {
+		err := itemModel.Delete(sculpt.Query{
+			Conditions: []sculpt.Condition{
+				sculpt.EqualTo("ID", deleteItemInput.ID),
+			},
+		})
+		if err != nil {
+			slog.Error("unable to run delete for item", slog.String("error", err.Error()))
+			c.SendResponse(puff.JSONResponse{
+				Content: map[string]any{
+					"error": "unable to delete item " + deleteItemInput.ID,
+				},
+			})
+			return
+		}
+		c.SendResponse(puff.JSONResponse{
+			Content: map[string]any{
+				"error": nil,
+			},
+		})
+	})
+
+	apiRouter.Get("/items", "Retrieves all items in the checklist.", nil, func(c *puff.Context) {
+		items, err := sculpt.RunQuery[*Item](itemModel, sculpt.Query{})
+		if err != nil {
+			slog.Error("unable to run query for items", slog.String("error", err.Error()))
+			c.SendResponse(puff.JSONResponse{
+				Content: map[string]any{
+					"error": "unable to get items",
+				},
+			})
+		}
+		c.SendResponse(puff.JSONResponse{
+			Content: items,
+		})
 	})
 
 	app.IncludeRouter(apiRouter)
