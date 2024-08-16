@@ -59,6 +59,7 @@ async function newItem(
   newItemRef: React.RefObject<HTMLInputElement>,
 ) {
   const value = newItemRef.current?.value;
+  newItemRef.current!.value = "";
   fetch(resolveHost() + "/api/item", {
     method: "POST",
     body: value,
