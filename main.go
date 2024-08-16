@@ -17,19 +17,13 @@ func main() {
 	godotenv.Load(".env")
 
 	mode := os.Getenv("MODE")
-	user := os.Getenv("POSTGRES_CONNECTION_USER")
-	password := os.Getenv("POSTGRES_CONNECTION_PASSWORD")
-	dbname := os.Getenv("POSTGRES_CONNECTION_DBNAME")
+	connectionURI := os.Getenv("POSTGRES_CONNECTION_URI")
 
 	if mode == "" {
 		mode = "development"
 	}
 
-	err := sculpt.Connect(
-		user,
-		password,
-		dbname,
-	)
+	err := sculpt.Connect(connectionURI)
 
 	if err != nil {
 		sculpt.LogError(err.Error())

@@ -27,12 +27,14 @@ body,
   width: 45%;
   font-size: 1.15rem;
   padding: 8px 3px 8px 6px;
+  border-radius: 15px;
 }
 .items-submit {
   margin-top: 10px;
   width: 30%;
   padding-top: 0.8rem;
   padding-bottom: 0.8rem;
+  border-radius: 15px;
   /* padding: 8px  8px 1rem; */
 }
 
@@ -57,5 +59,18 @@ body,
   }
   .item:hover {
     background-color: #363647;
+  }
+  .items-input {
+    background-color: #1f1f29;
+    color: white;
+    border: 1px solid white;
+  }
+  .items-submit {
+    background-color: #6d6d91;
+    color: white;
+    border: 2px solid white;
+  }
+  .items-input::placeholder {
+    color: #969696;
   }
 }

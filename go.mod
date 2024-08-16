@@ -5,7 +5,7 @@ go 1.22.2
 require (
 	github.com/joho/godotenv v1.5.1
 	github.com/nikumar1206/puff v0.0.0-20240811213106-bfbda11d89c7
-	github.com/tiredkangaroo/sculpt v0.0.5-0.20240815200507-be08ffc4cb16
+	github.com/tiredkangaroo/sculpt v0.0.5-0.20240816152624-a53eab592626
 )
 
 require (

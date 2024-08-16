@@ -8,5 +8,7 @@ github.com/nikumar1206/puff v0.0.0-20240811213106-bfbda11d89c7 h1:RmtlsRJtJ0WcSh
 github.com/nikumar1206/puff v0.0.0-20240811213106-bfbda11d89c7/go.mod h1:WZnQlkvpNCriuhLI5GUtr61yZT1LxTACG6UIeQJv5Rk=
 github.com/tiredkangaroo/sculpt v0.0.5-0.20240815200507-be08ffc4cb16 h1:vN7vJzXjLdtClpjg6/pgT9A0BtBFen2H323lQWpaLOY=
 github.com/tiredkangaroo/sculpt v0.0.5-0.20240815200507-be08ffc4cb16/go.mod h1:XKSG4k4CfDcAwISON43wXN5B4znKf3A2a+EVrqFJCLo=
+github.com/tiredkangaroo/sculpt v0.0.5-0.20240816152624-a53eab592626 h1:qL1aq3XZoKmqW5BVpMh1Wg4Zz55Op8CS/2P4ACM6CQ4=
+github.com/tiredkangaroo/sculpt v0.0.5-0.20240816152624-a53eab592626/go.mod h1:XKSG4k4CfDcAwISON43wXN5B4znKf3A2a+EVrqFJCLo=
 nhooyr.io/websocket v1.8.11 h1:f/qXNc2/3DpoSZkHt1DQu6rj4zGC8JmkkLkWss0MgN0=
 nhooyr.io/websocket v1.8.11/go.mod h1:rN9OFWIUwuxg4fR5tELlYC04bXYowCP9GX47ivo2l+c=
