@@ -18,8 +18,7 @@ type SpecificItemInput struct {
 	ID string `kind:"path" description:"ID of item to retrieve from database." example:"5NQDFNEF099G4997AO3A0GII"`
 }
 
-func startAPIServer(itemModel *sculpt.Model) {
-	app := puff.DefaultApp("Checklist")
+func getAPIRouter(itemModel *sculpt.Model) *puff.Router {
 	apiRouter := puff.NewRouter("API", "/api")
 
 	getItemInput := new(SpecificItemInput)
@@ -72,11 +71,12 @@ func startAPIServer(itemModel *sculpt.Model) {
 			})
 			return
 		}
-		itemRow, err := itemModel.New(&Item{
+		newItem := &Item{
 			ID:          randomID,
 			DateCreated: time.Now().String(),
 			Name:        newItemInput.ItemName,
-		})
+		}
+		itemRow, err := itemModel.New(newItem)
 		if err != nil {
 			slog.Error("unable to create item row", slog.String("error", err.Error()))
 			c.SendResponse(puff.JSONResponse{
@@ -99,6 +99,7 @@ func startAPIServer(itemModel *sculpt.Model) {
 		c.SendResponse(puff.JSONResponse{
 			Content: map[string]any{
 				"error": nil,
+				"item":  *newItem,
 			},
 		})
 		return
@@ -138,10 +139,12 @@ func startAPIServer(itemModel *sculpt.Model) {
 			})
 		}
 		c.SendResponse(puff.JSONResponse{
-			Content: items,
+			Content: map[string]any{
+				"error": nil,
+				"items": items,
+			},
 		})
 	})
 
-	app.IncludeRouter(apiRouter)
-	app.ListenAndServe(":8080")
+	return apiRouter
 }

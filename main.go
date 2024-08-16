@@ -16,9 +16,15 @@ type Item struct {
 func main() {
 	godotenv.Load(".env")
 
+	mode := os.Getenv("MODE")
 	user := os.Getenv("POSTGRES_CONNECTION_USER")
 	password := os.Getenv("POSTGRES_CONNECTION_PASSWORD")
 	dbname := os.Getenv("POSTGRES_CONNECTION_DBNAME")
+
+	if mode == "" {
+		mode = "development"
+	}
+
 	err := sculpt.Connect(
 		user,
 		password,
@@ -38,5 +44,5 @@ func main() {
 		return
 	}
 
-	startAPIServer(item)
+	startServer(mode, item)
 }
