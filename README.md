@@ -4,6 +4,7 @@ basic checklist app written in go and react
 ## running this application
 
 prerequisites:
+- npm 10.8 (used 10.8.2)
 - go 1.22 (used 1.22.6)
 - postgreSQL (used 14.11 homebrew)
 
@@ -18,7 +19,7 @@ POSTGRES_CONNECTION_URI="postgres://username:password@postgresServerIP:portIfNec
 ```
 
 ##### step 2:
-change working directory to frontend and run the command: `npm run build && mv dist ../static` (this will build the vite application and move it to the main directory for the application as "static").
+change working directory to frontend and run the command: `npm i && npm run build && mv dist ../static` (this will build the vite application and move it to the main directory for the application as "static").
 
 ##### step 3:
 go back to the main directory for application/repository and run the go program:
